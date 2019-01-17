@@ -1,0 +1,176 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<title>test</title>
+		<link rel="stylesheet" media="screen" type="text/css" title="Exemple" href="style.css"/>
+		<link rel="stylesheet" media="screen" type="text/css" title="Exemple" href="icons.css"/>
+		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="fiche_perso.js"></script>
+		<script type="text/javascript" src="caracter.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="script.js"></script>
+		<!--
+			class="icon-times-circle"
+			class="icon-mars"
+			class="icon-venus"
+			class="icon-female-symbol"
+			class="icon-male-symbol"
+			class="icon-star"
+			class="icon-star-half"
+			class="icon-star-half-o"
+			class="icon-star-o"
+			class="icon-circle"
+			class="icon-circle-thin"
+			class="icon-recycle"
+			class="icon-refresh"
+			class="icon-stop"
+			class="icon-ban"
+			class="icon-check"
+			class="icon-check-circle"
+			class="icon-square-o"
+			class="icon-check-square-o"
+		-->
+		<script type="text/javascript">
+			var data = null;
+			var arr_caracters = new Array();
+
+			function populate_raceSelect(){
+				var select = $('#form_race');
+				for(var key in data.race){
+					select.append($('<option></option>').attr({'val': key}).text(key));
+				}
+
+				// positionnement sur la race du personnage
+				select.val("rand");
+			}
+
+			$(document).ready(function(){
+				data = new c_data();
+				arr_caracters = new Array();
+
+				populate_raceSelect();
+
+				// Création d'un Json regroupant les infos des pnj générés pour sauvegarde
+				$('#export').click(function(){
+					var json = "";
+					var virgule = "";
+					for(var key in arr_caracters){
+						json += virgule+"\""+key+"\":"+arr_caracters[key].get_json();
+						var virgule = ",";
+					}
+
+					var json_global = "{"+json+"}";
+
+					$('#json_window .content').html(json_global);
+					$('#json_window a').click(function(){
+						$('#json_window .content').html("");
+						$('#json_window').hide();
+					});
+					$('#json_window').show();
+				});
+
+				// Import d'un json de personnages
+				$('#import').click(function(){
+					var txt_json = $('#import_json').val();
+					
+					var test_json = JSON.parse(txt_json);
+
+					for(var key in test_json){
+						var caracter = new c_caracter();
+						caracter.create_from_json(test_json[key]);
+						arr_caracters.push(caracter);
+					}
+
+					generate_sheets(arr_caracters);
+				});
+
+				// Ajoute un pnj a la liste déjà existante
+				$('#form_create_one').click(function(){
+					var power = $("#form_power").val();
+					var experience = $('#form_exp').val();
+					var race = $('#form_race').val();
+
+					var caracter = new c_caracter(power, "perso_"+arr_caracters.length, race, null, experience);
+					caracter.create();
+
+					arr_caracters.push(caracter);
+					
+					console.log(JSON.parse(caracter.get_json()));
+
+					generate_sheets(arr_caracters);
+				});
+
+				// Crée les fiche perso en fonction des infos données dans les champs
+				$("#form_create").click(function(){
+					arr_caracters = new Array();
+
+					console.log("-- Création d'un nouveau personnage --");
+					var power = $("#form_power").val();
+					var nombre = $("#form_number").val();
+					var experience = $("#form_exp").val();
+					var race = $('#form_race').val();
+
+					for( var i = 0 ; i < nombre ; i++){
+						// Creation du personnage et de sa fiche
+						var caracter = new c_caracter(power, "perso_"+i, race, null, experience);
+						caracter.create();
+
+						arr_caracters.push(caracter);
+
+						console.log(JSON.parse(caracter.get_json()));
+
+					}
+
+					console.log("-- Création de la fiche de personnage --");
+					generate_sheets(arr_caracters);
+				});
+
+				$('#init_rng_launch').click(function(){
+					// Détermine un score d'initiative pour chaque pnj et les place dans l'ordre
+					rng_initiative();
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="form_actions">
+			<label>Puissance :
+				<select id="form_power">	
+					<option value="inf" selected>Inférieur</option>
+					<option value="com">Commun</option>
+					<option value="sup">Supérieur</option>
+					<option value="elite">Elite</option>
+				</select>
+			</label>
+			<label>Nombre : <input type="text" id="form_number" value="1"/></label>
+			<label>Experience : <input type="text" id="form_exp" value="0"/></label>
+			<label>Espece :
+				<select id="form_race">	
+					<option value="rand" selected>Random</option>
+				</select>
+			</label>
+			<input type="button" id="form_create" value="creer groupe" />
+			<input type="button" id="form_create_one" value="ajouter" />
+			
+			<textarea id="import_json"></textarea>
+			<a href="javascript:" id="export">Export</a>
+			<a href="javascript:" id="import">Import</a>
+			<div id="init_generator">
+				<a href="javscript:" id="init_rng_launch">Initiative</a>
+				<div id="liste_init"></div>
+			</div>
+		</div>
+
+		<div id="content">
+			<div id="onglets"></div>
+			<div id="fiches"></div>
+		</div>
+
+		<div id="footer"></div>
+		<div id="json_window">
+			<a href="javascript:">close</a>
+			<textarea class="content"></textarea>
+		</div>
+	</body>
+</html>

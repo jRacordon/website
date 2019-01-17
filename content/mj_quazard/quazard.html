@@ -1,0 +1,185 @@
+﻿<!doctype html>
+<html>
+	<head>
+		<title>Jeux de quazard</title>
+		<script type="text/javascript" src="jquery-3.2.1.min.js"></script>
+
+		<script>
+			var value = 0;
+			var gain_total = 0;
+			var val_mise = 0;
+			var mise = null;
+			var launch = null;
+			var game = null;
+			var current = null;
+			var high = null;
+			var low = null;
+			var result = null;
+			var total = null;
+			var b_init = null;
+
+			function init(){
+				value = 0;
+				mise.val("0");
+				mise.removeAttr('disabled');
+				launch.removeAttr('disabled');
+				b_init.show();
+				game.hide();
+				current.html(value);
+				mise.val(100);
+			}
+
+			function rand(min, max) {
+  				return Math.floor(Math.random() * (max - min + 1) + min);
+			}
+
+			function calc_gain(){
+				var gain = 0;
+				switch(value){
+					/*case 18: 
+						gain = (val_mise*10)/100;
+						break;
+					case 19: 
+						gain = (val_mise*20)/100;
+						break;*/
+					case 20: 
+						gain = (val_mise*20)/100;
+						break;
+					default:
+						gain = 0;
+				}
+
+				return gain;
+			}
+
+			function gain_message(){
+
+				var span_gain = "";
+				if(gain_total > 0){
+					span_gain = "Vous avez gagné un total de <span class='color-green'>"+gain_total+"</span> crédits";
+				}
+				else{
+					span_gain = "Cher client, nous avons le plaisir de vous annoncer amicalement que vous nous devez <span class='color-red'>"+Math.abs(gain_total)+"</span> crédits";
+				}
+
+				return span_gain;
+			}
+
+			function check_result(){
+
+				current.html(value);
+
+				if(value > 21){
+					init();
+					gain_total -= val_mise;
+
+					result.html("Perdu !!! " + gain_message());
+				}
+				else if(value == 21){
+					init();
+					var gain = val_mise;
+					gain_total += gain;
+					result.html("Jack pot !!! " + gain_message());
+				}
+				else if(value == 20){
+					result.html('<a href="javascript:" id="quit">quitter</a>');
+
+					current.html("<span class='color-green'>" + value  +"</span>");
+
+					$('#quit').click(function(){
+						var gain = calc_gain();
+						gain_total += gain;
+						result.html(gain_message());
+						init();
+					});
+				}
+				else{
+					current.html(value);
+				}
+			}
+
+			$(document).ready(function(){
+				mise = $('#q_mise');
+				launch = $('#q_launch');
+				game = $('#game');
+				current = $('#current_val');
+				high = $('#high_range');
+				low = $('#low_range');
+				result = $('#result');
+				total = $('#total');
+				b_init = $('#b_init');
+
+				init();
+
+				launch.click(function(){
+					mise.attr('disabled', 'disabled');
+					launch.attr('disabled', 'disabled');
+					game.show();
+					b_init.hide();
+					current.html(value);
+					result.html('');
+					val_mise = mise.val() * 1;
+				});
+
+				high.click(function(){
+					value += rand(1,8);
+					check_result();
+				});
+
+				low.click(function(){
+					value += rand(4,7);
+					check_result();
+				});
+			});
+		</script>
+
+		<style>
+			.color-green{ color: #00ff00 !important; }
+			.color-red{ color: #ff0000 !important; }
+			.color-white{ color: #ffffff !important; }
+			.color-yellow{ color: #ffff00 !important; }
+			
+			#result { width: 100%; text-align: center; font-size: 30px; }
+
+			/* Style de l'écran d'accueil */
+			body { background-color:#000000; color:#ffffff; }
+			#b_init { position: fixed; width: 90%; height: 80%; top:15%; left:5%; background-color:#000; border: solid #ffff00 1px; border-radius: 30px; padding: 50px; box-sizing: border-box; }
+			#b_init label{ display: block; width: 100%; text-align: center; font-size: 20px; font-style: italic; color: #ffff00; }
+			#b_init select{ display: block; width: 200px; height: 50px; font-size: 30px; border: 1px solid #ffff00; border-radius: 25px; background-color: #000000; color: #ffff00; margin: auto; }
+			#b_init select option{ text-align: center; background-color: #ffff00; color: #000000; }
+			#b_init input[type="button"]{ border: 1px #ff0 solid; padding: 10px; border-radius: 25px; background-color: #000; color: #ffff00; height: 50px; width: 150px; font-weight: bold; font-size: 20px; box-shadow: inset 1px 1px 21px 3px #ffff00; display: block; margin: 60px auto; }
+			#b_init input[type="button"]:hover{ border: 1px #ffb42e solid; box-shadow: inset 1px 1px 21px 3px #ffb42e; }
+			
+			/* Style de l'écran de jeu */
+			#game { position: fixed; width: 90%; height: 80%; top:15%; left:5%; background-color:#000; border: solid #ffff00 1px; border-radius: 30px; padding: 50px; box-sizing: border-box; }
+			#current_val{ position: relative; width: 100px; top: 20%; left: calc(100% / 2 - 50px); font-size: 40px; font-weight: bold; color: #ffff00; text-align: center; }
+			#game a{ display: block; position: absolute; text-align: center; text-decoration: none; color: #ffff00; font-size: 30px; width: 200px; padding: 20px 0; background-color: #ffff00; border-radius: 20px; color:#000000; top: 60%; }
+			#game a.left{ left: 20%; }
+			#game a.right{ right: 20%; }
+			#game a:hover{ background-color: #00ff00; }
+		</style>
+	</head>
+	<body>
+		<div id="b_init">
+			<label>Choisissez votre mise</label>
+
+			<select id="q_mise">
+				<option value="100">100</option>
+				<option value="500">500</option>
+				<option value="1000">1'000</option>
+				<option value="10000">10'000</option>
+				<option value="1000000">1'000'000</option>
+			</select>
+			
+			<input type="button" id="q_launch" value="commencer" />
+		</div>
+
+		<div id="game">
+			<div id="current_val"></div>
+			<a href="#" id="high_range" class="left">1 - 8</a>
+			<a href="#" id="low_range" class="right">4 - 7</a>
+		</div>
+
+		<p id="result"></p>
+	</body>
+</html>

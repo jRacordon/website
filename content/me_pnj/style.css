@@ -1,0 +1,236 @@
+/* Styles génériques */
+body{
+	font-size: 12pt;
+}
+
+input.stat{
+	width: 25px;
+}
+
+input.text,
+select.text{
+	width: 200px;
+	float: right;
+}
+
+label{
+	display: block;
+	float: left;
+	width: 33%;
+	padding-left: 20px;
+	box-sizing: border-box;
+}
+
+input[type="text"]{
+	border: none;
+	background-color: #ffcaca;
+	text-align: center;
+}
+
+label input{
+	float: right;
+}
+
+fieldset{
+	box-sizing: border-box;
+}
+
+a.picto{
+	display: block;
+	height: 16px;
+	width: 16px;
+	float: right;
+}
+
+a.btn{
+	cursor: pointer;
+}
+
+#footer{
+	clear:both;
+}
+
+/* Fenetre d'affichage du json en résultat de la demande d'export */
+#json_window{
+	position: fixed;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+	padding: 20px;
+	display: none;
+	z-index:8000;
+}
+
+#json_window textarea{
+	position: relative;
+	top: 50px;
+	left: 50px;
+    width: calc(100% - 150px);
+    height: calc(100% - 200px);
+}
+
+/* Pour le cadre de form_action */
+#form_actions{
+	position: fixed;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: #ffffff;
+    border: 1px solid black;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+#form_actions:hover{
+	height: 115px;
+}
+
+#form_actions input[type="text"]{
+	width: 100%;
+}
+
+#form_actions label{
+	width: 110px;
+}
+
+/* Styles pour la zone content */
+#content{
+	position: relative;
+	top: 20px;
+	left: 0;
+	padding-bottom: 20px;
+}
+
+/* Styles pour les onglets */
+.fiche_onglet{
+	display: block;
+    height: 40px;
+    text-align: center;
+    padding: 8px;
+    border: 1px solid black;
+    float: left;
+    box-sizing: border-box
+}
+
+.fiche_onglet.active{
+	background-color: #000000;
+	color: #ffffff;
+}
+
+.fiche_onglet:hover{
+	border-color: #ff0000;
+}
+
+#liste_init .round{
+	display: block;
+    float: left;
+    padding: 6px;
+    border: 1px solid #000000;
+    border-radius: 15px;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+/* Styles de la fiche de perso */
+
+.fiche_perso{
+		width: 900px;
+		position: relative;
+		top: 0;
+		left: 0;
+}
+
+#stats_modele div fieldset,
+.fiche_perso div fieldset{
+	width: 100%;
+}
+
+.tooltip{
+	display: none;
+	position: absolute;
+	top: 100px;
+	width: 400px;
+	left: calc(100% / 2 - 200px);
+	box-sizing: border-box;
+	border: 1px solid #000;
+	background-color: #c0c000;
+	padding: 10px;
+}
+
+label:hover .tooltip{
+	display:block;
+}
+
+.wep_line{
+	clear: both;
+}
+
+.wep_line span{
+    width: 100px;
+    display: block;
+    float: left;
+    text-align: center;
+}
+.wep_line span.small{
+	width:70px;
+}
+.wep_line span.large{
+	width:150px;
+}
+
+/* Style pour l'affichage sur toute la largeur */
+.wide{
+	clear: both;
+	float: left;
+	width: 900px;
+	box-sizing: border-box;
+}
+
+/* Style pour l'affichage sur 2 colonnes */
+.col2{
+	float: left;
+	width: 450px;
+	box-sizing: border-box;
+}
+
+.col2.left{
+	clear: both;
+	padding-right: 5px;
+}
+
+.col2.right{
+	padding-left: 5px;
+}
+
+#stats_modele div.col2 label,
+.fiche_perso div.col2 label{
+	width: 100%;
+}
+
+/*Style pour l'affichage en 3 colonnes*/
+.col3{
+	float: left;
+	width: 300px;
+	box-sizing: border-box;
+}
+
+.col3.left{
+	clear: both;
+	padding-right: 5px;
+}
+
+.col3.right{
+	padding-left: 5px;
+}
+
+#stats_modele div.col3 label,
+.fiche_perso div.col3 label{
+	width: 100%;
+}
